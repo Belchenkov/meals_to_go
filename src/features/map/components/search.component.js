@@ -26,7 +26,7 @@ const Search = () => {
             <Searchbar
                 placeholder="Search for a location"
                 value={searchKeyword}
-                icon='map'
+                icon="map"
                 onSubmitEditing={() => {
                     search(searchKeyword);
                 }}
