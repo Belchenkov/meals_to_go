@@ -21,7 +21,7 @@ export const FavouritesContextProvider = ({ children }) => {
             value={{
                 favourites,
                 addToFavourites: add,
-                removeFromFavorites: remove,
+                removeFromFavourites: remove,
             }}
         >
             {children}

@@ -7,20 +7,31 @@ import { FavouritesContext } from '../../services/favourites/favourites.context'
 
 const FavouriteButton = styled(TouchableOpacity)`
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 25px;
+    right: 25px;
     z-index: 9;
 `;
 
-const Favourite = () => {
-    const { favourites, addToFavourites, removeFromFavourites } = useContext(FavouritesContext);
+const Favourite = ({ restaurant }) => {
+    const { favourites, addToFavourites, removeFromFavourites } =
+        useContext(FavouritesContext);
+
+    const isFavourite = favourites.find(
+        (r) => r.placeId === restaurant.placeId
+    );
 
     return (
-        <FavouriteButton>
+        <FavouriteButton
+            onPress={() =>
+                !isFavourite
+                    ? addToFavourites(restaurant)
+                    : removeFromFavourites(restaurant)
+            }
+        >
             <AntDesign
-                name='heart'
+                name={isFavourite ? 'heart' : 'hearto'}
                 size={24}
-                color='red'
+                color={isFavourite ? 'red' : 'white'}
             />
         </FavouriteButton>
     );
