@@ -25,6 +25,7 @@ export const AuthContextProvider = ({ children }) => {
     return (
         <AuthContext.Provider
             value={{
+                isAuth: !!user,
                 user,
                 isLoading,
                 error,
