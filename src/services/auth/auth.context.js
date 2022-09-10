@@ -7,7 +7,7 @@ export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
     const [isLoading, setLoading] = useState(false);
     const [user, setUser] = useState(null);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState([]);
 
     const onLogin = (email, password) => {
         setLoading(true);
@@ -18,7 +18,7 @@ export const AuthContextProvider = ({ children }) => {
             })
             .catch((err) => {
                 setLoading(false);
-                setError(err);
+                setError(err.toString());
             });
     };
 
@@ -35,4 +35,4 @@ export const AuthContextProvider = ({ children }) => {
             {children}
         </AuthContext.Provider>
     );
-}
+};

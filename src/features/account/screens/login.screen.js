@@ -9,11 +9,12 @@ import {
 } from '../components/account.styles';
 import { Spacer } from '../../../components/spacer/spacer.component';
 import { AuthContext } from '../../../services/auth/auth.context';
+import { Text } from '../../../components/typography/text.component';
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { onLogin } = useContext(AuthContext);
+    const { onLogin, error } = useContext(AuthContext);
 
     return (
         <AccountBackground>
@@ -38,6 +39,11 @@ const LoginScreen = () => {
                         onChangeText={(p) => setPassword(p)}
                     />
                 </Spacer>
+                {error && (
+                    <Spacer size="large">
+                        <Text variant="error">{error}</Text>
+                    </Spacer>
+                )}
                 <Spacer size="large">
                     <AuthButton
                         icon="lock-open-outline"
