@@ -1,42 +1,60 @@
 import React, { useState, createContext } from 'react';
 import * as firebase from 'firebase';
+
 import { loginRequest, registerRequest } from './auth.service';
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [user, setUser] = useState(null);
     const [error, setError] = useState([]);
 
+    firebase.auth().onAuthStateChanged((firebaseUser) => {
+        if (firebaseUser) {
+            setUser(firebaseUser);
+            setIsLoading(false);
+        } else {
+            setIsLoading(false);
+        }
+    });
+
     const onLogin = (email, password) => {
-        setLoading(true);
+        setIsLoading(true);
+
         loginRequest(email, password)
             .then((res) => {
                 setUser(res);
-                setLoading(false);
+                setIsLoading(false);
             })
             .catch((err) => {
-                setLoading(false);
+                setIsLoading(false);
                 setError(err.toString());
             });
     };
 
     const onRegister = (email, password, repeatedPassword) => {
+        setIsLoading(true);
+
         if (password !== repeatedPassword) {
             setError('Error: Password do not match');
         }
 
-        setLoading(true);
+        setIsLoading(true);
         registerRequest(email, password)
             .then((res) => {
                 setUser(res);
-                setLoading(false);
+                setIsLoading(false);
             })
             .catch((err) => {
-                setLoading(false);
+                setIsLoading(false);
                 setError(err.toString());
             });
+    };
+
+    const onLogout = () => {
+        setUser(null);
+        firebase.auth().signOut();
     };
 
     return (
@@ -48,6 +66,7 @@ export const AuthContextProvider = ({ children }) => {
                 error,
                 onLogin,
                 onRegister,
+                onLogout,
             }}
         >
             {children}
