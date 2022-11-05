@@ -1,18 +1,31 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Camera } from 'expo-camera';
 import styled from 'styled-components/native';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import Text from '../../../components/typography/text.component';
+import { Text } from '../../../components/typography/text.component';
+import { AuthContext } from '../../../services/auth/auth.context';
 
 const ProfileCamera = styled(Camera)`
     width: 100%;
     height: 100%;
 `;
 
-const CameraScreen = () => {
+const CameraScreen = ({ navigation }) => {
     const [hasPermission, setHasPermission] = useState(null);
     const cameraRef = useRef();
+    const { user } = useContext(AuthContext);
+
+    const snap = async () => {
+        console.log(cameraRef.current);
+        if (cameraRef) {
+            const photo = await cameraRef.current.takePictureAsync();
+            console.log(photo, 'photo');
+            AsyncStorage.setItem(`${user.uid}-photo`, photo.uri);
+            navigation.goBack();
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -30,10 +43,12 @@ const CameraScreen = () => {
     }
 
     return (
-        <ProfileCamera
-            ref={(camera) => (cameraRef.current = camera)}
-            type={Camera.Constants.Type.front}
-        />
+        <TouchableOpacity onPress={snap}>
+            <ProfileCamera
+                ref={(camera) => (cameraRef.current = camera)}
+                type={Camera.Constants.Type.front}
+            />
+        </TouchableOpacity>
     );
 };
 
